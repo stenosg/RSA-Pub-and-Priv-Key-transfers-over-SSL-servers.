@@ -32,7 +32,10 @@ int main(int argc, char** argv)
 
     char infilename[] = "stenos.txt";
     char outfilename[] = "DocOut.txt";
-  
+
+  //  char* generated_key[1024];
+   // char* decrypted_key[1024];
+
     char pbcfilename[] = "rsapublickey.pem";
 
     unsigned char buffer1[1024] = "testing tesing gekasssss";
@@ -109,7 +112,7 @@ int main(int argc, char** argv)
 	//SSL_write
     int write_x;
     //const int temp_port =1300;
-    write_x = SSL_write(ssl, 0, 31337);   
+    write_x = SSL_write(ssl, (const void*)randomNumber.c_str(), 31337);   
 
 
     printf("SUCCESS.\n");
@@ -119,7 +122,7 @@ int main(int argc, char** argv)
 	// 3a. Receive the signed key from the server
 	printf("3a. Receiving signed key from server...");
 
-    char* buff="FIXME";
+    char* buff[1024];
     int len=5;
 
 	//SSL_read;

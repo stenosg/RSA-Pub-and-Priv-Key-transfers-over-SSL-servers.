@@ -112,9 +112,10 @@ int main(int argc, char** argv)
 	printf("2. Waiting for client to connect and send challenge...");
     
     //SSL_read
+    string challenge="gekas";
     int read_x;
-     read_x = SSL_read(ssl, port, BUFFER_SIZE);
-    string challenge="";
+     read_x = SSL_read(ssl, (void*)challenge.c_str(), BUFFER_SIZE);
+    
     
 	printf("DONE.\n");
 	printf("    (Challenge: \"%s\")\n", challenge.c_str());
@@ -163,7 +164,7 @@ int main(int argc, char** argv)
 	//BIO_flush
 	//SSL_write
      int write_x;
-      write_x = SSL_write(ssl, port, BUFFER_SIZE); 
+      write_x = SSL_write(ssl, (const void*)signature, BUFFER_SIZE); 
 
     printf("DONE.\n");
     
