@@ -128,7 +128,7 @@ int main(int argc, char** argv)
 	//SSL_read;
 
      int read_x;
-     read_x = SSL_read(ssl, buff, BUFFER_SIZE);
+     read_x = SSL_read(ssl, (void*)buff, BUFFER_SIZE);
      
 
 	printf("RECEIVED.\n");
@@ -139,7 +139,9 @@ int main(int argc, char** argv)
 	printf("3b. Authenticating key...");
 
 	//BIO_new(BIO_s_mem())
+     binfile = BIO_new_file(infilename, "w");
 	//BIO_write
+     int bwrite = BIO_write(binfile, (void*)buff, len);
 	//BIO_new_file
 	//PEM_read_bio_RSA_PUBKEY
      BIO *rsapubkey;
@@ -164,10 +166,12 @@ int main(int argc, char** argv)
 
 	PAUSE(2);
 	//BIO_flush
+    int flush = BIO_flush(binfile);
     //BIO_puts
+    int bputs = BIO_puts(binfile, (const char*)buff);
 	//SSL_write
     int write_x2;
-    write_x2 = SSL_write(ssl, 0, 31337); 
+    write_x2 = SSL_write(ssl, (const void*)buff, BUFFER_SIZE); 
 
     printf("SENT.\n");
 	printf("    (File requested: \"%s\")\n", filename);
@@ -179,7 +183,7 @@ int main(int argc, char** argv)
     //BIO_new_file
     //SSL_read
     int read_x2;
-     read_x2 = SSL_read(ssl, buff, len);
+     read_x2 = SSL_read(ssl, (void*)buff, len);
 	//BIO_write
 	//BIO_free
 
