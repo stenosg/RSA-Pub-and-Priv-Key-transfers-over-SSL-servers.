@@ -1,0 +1,5 @@
+Stenos
+
+More than 400 million people trust Google with their e-mail, and 50 million store files in the cloud using the Dropbox service. People manage their bank accounts, pay bills, trade stocks and generally transfer or store huge volumes of personal data online. Who is ultimately in charge of making sure all this information is secure: the government, the companies or the users?
+
+At lively panel discussion at the annual Black Hat security conference in Las Vegas on Wednesday, computer security experts discussed the roll of the government in online security. The debate centered on whether the U.S. government should take the lead in setting security standards for the industry or whether companies are responsible for their own security and that of their users.
