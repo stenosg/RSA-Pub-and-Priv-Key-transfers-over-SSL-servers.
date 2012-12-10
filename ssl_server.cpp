@@ -99,6 +99,8 @@ int main(int argc, char** argv)
 	printf("2. Waiting for client to connect and send challenge...");
     
     //SSL_read
+    int read_x;
+     read_x = SSL_read(ssl, 0, 5);
     string challenge="";
     
 	printf("DONE.\n");
@@ -142,6 +144,8 @@ int main(int argc, char** argv)
 
 	//BIO_flush
 	//SSL_write
+     int write_x;
+      write_x = SSL_write(ssl, signature, siglen); 
 
     printf("DONE.\n");
     
@@ -150,6 +154,8 @@ int main(int argc, char** argv)
 	printf("6. Receiving file request from client...");
 
     //SSL_read
+    int read_x2;
+     read_x2 = SSL_read(ssl, signature, BUFFER_SIZE);
     char file[BUFFER_SIZE];
     memset(file,0,sizeof(file));
     printf("RECEIVED.\n");

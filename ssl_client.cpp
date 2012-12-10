@@ -94,7 +94,10 @@ int main(int argc, char** argv)
     
     string randomNumber="31337";
 	//SSL_write
-    
+    int write_x;
+    write_x = SSL_write(ssl, 0, 31337);   
+
+
     printf("SUCCESS.\n");
 	printf("    (Challenge sent: \"%s\")\n", randomNumber.c_str());
 
@@ -104,7 +107,12 @@ int main(int argc, char** argv)
 
     char* buff="FIXME";
     int len=5;
+
 	//SSL_read;
+
+     int read_x;
+     read_x = SSL_read(ssl, buff, len);
+     
 
 	printf("RECEIVED.\n");
 	printf("    (Signature: \"%s\" (%d bytes))\n", buff2hex((const unsigned char*)buff, len).c_str(), len);
@@ -135,6 +143,8 @@ int main(int argc, char** argv)
 	//BIO_flush
     //BIO_puts
 	//SSL_write
+    int write_x2;
+    write_x2 = SSL_write(ssl, 0, 31337); 
 
     printf("SENT.\n");
 	printf("    (File requested: \"%s\")\n", filename);
@@ -145,6 +155,8 @@ int main(int argc, char** argv)
 
     //BIO_new_file
     //SSL_read
+    int read_x2;
+     read_x2 = SSL_read(ssl, buff, len);
 	//BIO_write
 	//BIO_free
 
