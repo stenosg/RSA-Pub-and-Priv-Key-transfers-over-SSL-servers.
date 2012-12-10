@@ -32,6 +32,8 @@ int main(int argc, char** argv)
     char pvtfilename[] = "rsaprivatekey.pem";
     char pbcfilename[] = "rsapublickey.pem";
 
+    
+
     BIO *binfile, *boutfile, *hash, *pvtkey, *pbckey;
     binfile = BIO_new_file(infilename, "r");
     boutfile = BIO_new_file(outfilename, "w") ;
@@ -140,6 +142,11 @@ int main(int argc, char** argv)
 	printf("4. Signing the key...");
 
     //PEM_read_bio_RSAPrivateKey
+    BIO *rsaprivkey;
+    rsaprivkey = BIO_new_file(pvtfilename, "r");
+    RSA *gekas = PEM_read_bio_RSAPrivateKey(rsaprivkey, NULL, 0, NULL);
+    int e_priv;
+    //e_priv = RSA_private_encrypt(mdlen, (const unsigned char*)mdbuf, buffer1, gekas, RSA_PKCS1_PADDING);
     //RSA_private_encrypt
 
     int siglen=0;
