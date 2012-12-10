@@ -128,7 +128,7 @@ int main(int argc, char** argv)
 	//BIO_new(BIO_f_md());
 	//BIO_set_md;
 	//BIO_push;
-	//BIO_gets;
+	//BIO_gets; BIO_read(bfile, buffer, BUFFER_SIZE)) > 0)
 
     int mdlen=0;
 	string hash_string = "";
