@@ -128,7 +128,7 @@ int main(int argc, char** argv)
 	//SSL_read;
 
      int read_x;
-     read_x = SSL_read(ssl, (void*)buff, BUFFER_SIZE);
+     read_x = SSL_read(ssl, (void*)buff, len);
      
 
 	printf("RECEIVED.\n");
@@ -153,8 +153,8 @@ int main(int argc, char** argv)
 	
 	//BIO_free
 	
-	string generated_key="";
-	string decrypted_key="";
+	//string generated_key = buff2hex((const unsigned char*)buff, len).c_str(), len);
+	//string decrypted_key = buff2hex((const unsigned char*)buff, len).c_str(), len);
     
 	printf("AUTHENTICATED\n");
 	printf("    (Generated key: %s)\n", generated_key.c_str());
@@ -183,7 +183,7 @@ int main(int argc, char** argv)
     //BIO_new_file
     //SSL_read
     int read_x2;
-     read_x2 = SSL_read(ssl, buff, len);
+     read_x2 = SSL_read(ssl, (void*)buff, len);
 	//BIO_write
 	//BIO_free
 

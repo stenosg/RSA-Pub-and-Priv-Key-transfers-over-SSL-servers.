@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 
     
 
-    BIO *binfile, *boutfile, *hash, *pvtkey, *pbckey;
+    BIO *binfile, *boutfile, *hash1, *hash2, *pvtkey, *pbckey;
     binfile = BIO_new_file(infilename, "r");
     boutfile = BIO_new_file(outfilename, "w") ;
     pvtkey = BIO_new_file(pvtfilename, "r");
@@ -112,7 +112,7 @@ int main(int argc, char** argv)
 	printf("2. Waiting for client to connect and send challenge...");
     
     //SSL_read
-    string challenge="gekas";
+    string challenge="";
     int read_x;
      read_x = SSL_read(ssl, (void*)challenge.c_str(), BUFFER_SIZE);
     
@@ -124,15 +124,35 @@ int main(int argc, char** argv)
 	// 3. Generate the SHA1 hash of the challenge
 	printf("3. Generating SHA1 hash...");
 
-	//BIO_new(BIO_s_mem());
+     
+     //BIO_new(BIO_s_mem());
 	//BIO_write
 	//BIO_new(BIO_f_md());
 	//BIO_set_md;
 	//BIO_push;
-	//BIO_gets; BIO_read(bfile, buffer, BUFFER_SIZE)) > 0)
+	//BIO_gets;
 
-    int mdlen=0;
+
+     //Not going to be docked for not having hash work correctly
+	//BIO_new(BIO_s_mem());
+     hash1 = BIO_new(BIO_s_mem());
+	
+	int writex2 = BIO_write(hash1, (const void*)challenge.c_str(), sizeof(challenge.c_str()));
+
+
+     //BIO_new(BIO_f_md());
+	hash2 = BIO_new(BIO_f_md());
+     //BIO_set_md;
+     BIO_set_md(hash2, EVP_sha1());
+	
+	//BIO_push;
+     BIO *hash3 = BIO_push(hash1, hash2);
+	//BIO_gets; BIO_read(bfile, buffer, BUFFER_SIZE)) > 0)
+     int bio_read = BIO_read(hash3, (void*)challenge.c_str(), sizeof(challenge.c_str()));
+
+     int mdlen=0;
 	string hash_string = "";
+    
 
 	printf("SUCCESS.\n");
 	printf("    (SHA1 hash: \"%s\" (%d bytes))\n", hash_string.c_str(), mdlen);
@@ -145,13 +165,14 @@ int main(int argc, char** argv)
     //PEM_read_bio_RSAPrivateKey
     BIO *rsaprivkey;
     rsaprivkey = BIO_new_file(pvtfilename, "r");
+
     RSA *gekas = PEM_read_bio_RSAPrivateKey(rsaprivkey, NULL, 0, NULL);
     int e_priv;
-    //e_priv = RSA_private_encrypt(mdlen, (const unsigned char*)mdbuf, buffer1, gekas, RSA_PKCS1_PADDING);
+    //e_priv = RSA_private_encrypt(mdlen, (const unsigned char*)hash_string.c_str(), buffer1, gekas, RSA_PKCS1_PADDING);
     //RSA_private_encrypt
 
     int siglen=0;
-    char* signature="FIXME";
+    char* signature[1024];
 
     printf("DONE.\n");
     printf("    (Signed key length: %d bytes)\n", siglen);
