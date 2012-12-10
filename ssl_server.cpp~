@@ -26,17 +26,6 @@ int main(int argc, char** argv)
 	ERR_load_crypto_strings();
 	SSL_load_error_strings();
     SSL_library_init();
-
-    char infilename[] = "stenos.txt";
-    char outfilename[] = "DocOut.txt";
-    char pvtfilename[] = "rsaprivatekey.pem";
-    char pbcfilename[] = "rsapublickey.pem";
-
-    BIO *binfile, *boutfile, *hash, *pvtkey, *pbckey;
-    binfile = BIO_new_file(infilename, "r");
-    boutfile = BIO_new_file(outfilename, "w") ;
-    pvtkey = BIO_new_file(pvtfilename, "r");
-    pbckey = BIO_new_file(pbcfilename, "r");
     
     setbuf(stdout, NULL); // disables buffered output
 
