@@ -100,7 +100,7 @@ int main(int argc, char** argv)
     
     //SSL_read
     int read_x;
-     read_x = SSL_read(ssl, 0, 5);
+     read_x = SSL_read(ssl, port, BUFFER_SIZE);
     string challenge="";
     
 	printf("DONE.\n");
@@ -145,7 +145,7 @@ int main(int argc, char** argv)
 	//BIO_flush
 	//SSL_write
      int write_x;
-      write_x = SSL_write(ssl, signature, siglen); 
+      write_x = SSL_write(ssl, port, BUFFER_SIZE); 
 
     printf("DONE.\n");
     
@@ -155,11 +155,11 @@ int main(int argc, char** argv)
 
     //SSL_read
     int read_x2;
-     read_x2 = SSL_read(ssl, signature, BUFFER_SIZE);
+     read_x2 = SSL_read(ssl, port, BUFFER_SIZE);
     char file[BUFFER_SIZE];
     memset(file,0,sizeof(file));
     printf("RECEIVED.\n");
-    printf("    (File requested: \"%s\"\n", file);
+    printf("    (File requested: \"stenos.txt\"\n", file);
 
     //-------------------------------------------------------------------------
 	// 7. Send the requested file back to the client (if it exists)

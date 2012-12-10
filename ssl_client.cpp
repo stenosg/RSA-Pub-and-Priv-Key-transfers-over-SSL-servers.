@@ -95,6 +95,7 @@ int main(int argc, char** argv)
     string randomNumber="31337";
 	//SSL_write
     int write_x;
+    //const int temp_port =1300;
     write_x = SSL_write(ssl, 0, 31337);   
 
 
@@ -111,7 +112,7 @@ int main(int argc, char** argv)
 	//SSL_read;
 
      int read_x;
-     read_x = SSL_read(ssl, buff, len);
+     read_x = SSL_read(ssl, buff, BUFFER_SIZE);
      
 
 	printf("RECEIVED.\n");
