@@ -192,11 +192,11 @@ int main(int argc, char** argv)
     
 
 	//BIO_flush
-	//SSL_write
+     BIO_flush(server);
+
+	SSL_write(ssl, (const void*)signature, siglen);
      
-     int write_x;
      
-      write_x = SSL_write(ssl, (const void*)temp_buff2, siglen);
 
       
 
@@ -215,9 +215,13 @@ int main(int argc, char** argv)
 
     //SSL_read
     int read_x2;
-     read_x2 = SSL_read(ssl, port, BUFFER_SIZE);
+     
     char file[BUFFER_SIZE];
+    
     memset(file,0,sizeof(file));
+
+    SSL_read(ssl,file,BUFFER_SIZE);
+
     printf("RECEIVED.\n");
     printf("    (File requested: \"stenos.txt\"\n", file);
 

@@ -206,11 +206,21 @@ int main(int argc, char** argv)
 	printf("5.  Receiving response from server...");
 
     //BIO_new_file
+    BIO* b_mem = BIO_new_file(infilename, "r");
+    BIO* outfile = BIO_new_file(outfilename, "w");
     //SSL_read
     int read_x2;
-     //read_x2 = SSL_read(ssl, (void*)buff, len);
-	//BIO_write
-	//BIO_free
+    
+    while(len+BIO_read(b_mem,buff,sizeof(buff)))
+    {
+       printf(buff);
+       BIO_write(outfile,buff,len);
+
+    }
+    BIO_free(b_mem);
+    BIO_free(outfile);
+
+
 
 	printf("FILE RECEIVED.\n");
 
