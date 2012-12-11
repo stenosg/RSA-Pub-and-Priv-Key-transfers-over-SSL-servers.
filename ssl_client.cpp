@@ -5,6 +5,7 @@
 //              connection
 //----------------------------------------------------------------------------
 #include <string>
+#include <iostream>
 #include <time.h>               // to seed random number generator
 #include <sstream>          // stringstreams
 using namespace std;
@@ -38,7 +39,7 @@ int main(int argc, char** argv)
 
     char pbcfilename[] = "rsapublickey.pem";
 
-    unsigned char buffer1[1024] = "testing tesing gekasssss";
+   // unsigned char buffer1[1024] = "testing tesing gekasssss";
 
     BIO *binfile, *boutfile, *hash, *pbckey;
 	binfile = BIO_new_file(infilename, "r");
@@ -125,7 +126,9 @@ int main(int argc, char** argv)
     char buff[BUFFER_SIZE];
     memset(buff,0,BUFFER_SIZE);
     int len = SSL_read(ssl, (void*)buff, BUFFER_SIZE);
+   
 
+    //printf("    (Signed key length: %d bytes)\n", sizeof(buff));
 	//SSL_read;
 
      
@@ -147,30 +150,36 @@ int main(int argc, char** argv)
 	//BIO_free
    
      char temp_buff[BUFFER_SIZE];
-
+     string generated_key = "rsapublickey.pem";
+     string decrypted_key ="";
 	//BIO_new(BIO_s_mem())
     
-    
+     //int  = SSL_read(ssl, (void*)buff, BUFFER_SIZE);
      BIO* buffx = BIO_new(BIO_s_mem());
 
 	//BIO_write
-     //int bwrite = BIO_write(buffx, (void*)buff, len);
-	
+     int zidane = BIO_write(buffx, (void*)buff, BUFFER_SIZE);
+	//printf("    (Signed key length: %d bytes)\n", sizeof(buff));
 	//PEM_read_bio_RSA_PUBKEY
      BIO *rsapubkey;
-     rsapubkey = BIO_new_file(pbcfilename, "r");
-     RSA *ninis = PEM_read_bio_RSA_PUBKEY(rsapubkey, NULL, 0, NULL);
+     rsapubkey = BIO_new_file(generated_key.c_str(), "r");
+     RSA *ninis = PEM_read_bio_RSA_PUBKEY(rsapubkey, NULL, NULL, NULL);
      //RSA_public_decrypt
 
      int rsa_size = RSA_size(ninis);
+
      int e_pub;
+
+
      e_pub = RSA_public_decrypt(rsa_size, (const unsigned char*)buff, (unsigned char*)temp_buff, ninis, RSA_PKCS1_PADDING); 
 	
-     int freex = BIO_free(buffx);
+    
 	//BIO_free
 	
-	string generated_key = buff2hex((const unsigned char*)buff, len).c_str();
-	string decrypted_key = buff2hex((const unsigned char*)temp_buff, len).c_str();
+	generated_key = buff2hex((const unsigned char*)buff, 20).c_str();
+	decrypted_key = buff2hex((const unsigned char*)temp_buff, 20).c_str();
+
+     int freex = BIO_free(buffx);
     
 	printf("AUTHENTICATED\n");
 	printf("    (Generated key: %s)\n", generated_key.c_str());
@@ -184,10 +193,10 @@ int main(int argc, char** argv)
 	//BIO_flush
     int flush = BIO_flush(binfile);
     //BIO_puts
-    int bputs = BIO_puts(binfile, (const char*)buff);
+    string f_name = filename;
+    int bputs = BIO_puts(binfile, filename);
 	//SSL_write
-    int write_x2;
-    write_x2 = SSL_write(ssl, (const void*)buff, BUFFER_SIZE); 
+    SSL_write(ssl, filename, f_name.size()); 
 
     printf("SENT.\n");
 	printf("    (File requested: \"%s\")\n", filename);
@@ -199,7 +208,7 @@ int main(int argc, char** argv)
     //BIO_new_file
     //SSL_read
     int read_x2;
-     read_x2 = SSL_read(ssl, (void*)buff, len);
+     //read_x2 = SSL_read(ssl, (void*)buff, len);
 	//BIO_write
 	//BIO_free
 

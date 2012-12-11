@@ -132,7 +132,7 @@ int main(int argc, char** argv)
 	//BIO_push;
 	//BIO_gets;
 
-     char* mdbuff[20];
+     char mdbuff[20];
      //Not going to be docked for not having hash work correctly
 	//BIO_new(BIO_s_mem());
 
@@ -165,7 +165,7 @@ int main(int argc, char** argv)
 	printf("4. Signing the key...");
 
     char temp_buff2[BUFFER_SIZE];
-    
+    memset(temp_buff2,0,BUFFER_SIZE);
     //PEM_read_bio_RSAPrivateKey
     BIO *rsaprivkey;
     rsaprivkey = BIO_new_file(pvtfilename, "r");
@@ -196,7 +196,9 @@ int main(int argc, char** argv)
      
      int write_x;
      
-      write_x = SSL_write(ssl, (const void*)signature, siglen);
+      write_x = SSL_write(ssl, (const void*)temp_buff2, siglen);
+
+      
 
 
     
