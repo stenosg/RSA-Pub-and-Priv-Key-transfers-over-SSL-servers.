@@ -261,7 +261,7 @@ int main(int argc, char** argv)
 	//BIO_new_file
     BIO* ifile = BIO_new_file(file, "r");
     BIO_puts(server, "fnf");
-    //BIO_read(ifile, buffer, BUFFER_SIZE)) > 0)
+    //BIO_read(ifile, buffer, BUFFER_SIZE)) > 0) Code given to us in the project by Mike
 	//SSL_write(ssl, buffer, bytesRead);
 
     string output;

@@ -236,7 +236,7 @@ int main(int argc, char** argv)
     memset(file,0,sizeof(file));
 
 
-    cout << "Reached this point" << endl;
+   // cout << "Reached this point" << endl; had trouble recognizing the request
     SSL_read(ssl,file,BUFFER_SIZE);
 
     
