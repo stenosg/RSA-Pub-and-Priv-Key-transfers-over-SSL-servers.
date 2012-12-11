@@ -194,7 +194,7 @@ int main(int argc, char** argv)
 	//BIO_flush
      BIO_flush(server);
 
-	SSL_write(ssl, (const void*)temp_buff2, siglen);
+	SSL_write(ssl, (const void*)signature, siglen);
      
      
 
@@ -231,7 +231,13 @@ int main(int argc, char** argv)
 
 	PAUSE(2);
 	//BIO_flush
-     BIO_flush(server);
+    int actualRead, actualWritten;
+
+    char buffer[BUFFER_SIZE];
+    memset(buffer,0,BUFFER_SIZE);
+
+
+    BIO_flush(server);
 	//BIO_new_file
     BIO* ifile = BIO_new_file(infilename, "w");
     BIO_puts(server, "fnf");
