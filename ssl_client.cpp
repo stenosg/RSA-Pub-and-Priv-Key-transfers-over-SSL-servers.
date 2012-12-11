@@ -210,7 +210,7 @@ int main(int argc, char** argv)
     BIO* outfile = BIO_new_file(outfilename, "w");
     //SSL_read
     int read_x2;
-    
+    /*
     while(len+BIO_read(b_mem,buff,sizeof(buff)))
     {
        printf(buff);
@@ -219,6 +219,7 @@ int main(int argc, char** argv)
     }
     BIO_free(b_mem);
     BIO_free(outfile);
+    */
 
 
 

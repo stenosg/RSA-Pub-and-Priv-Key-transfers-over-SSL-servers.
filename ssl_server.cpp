@@ -194,7 +194,7 @@ int main(int argc, char** argv)
 	//BIO_flush
      BIO_flush(server);
 
-	SSL_write(ssl, (const void*)signature, siglen);
+	SSL_write(ssl, (const void*)temp_buff2, siglen);
      
      
 
@@ -223,7 +223,7 @@ int main(int argc, char** argv)
     SSL_read(ssl,file,BUFFER_SIZE);
 
     printf("RECEIVED.\n");
-    printf("    (File requested: \"stenos.txt\"\n", file);
+    printf("    (File requested: \"%s\"\n", file);
 
     //-------------------------------------------------------------------------
 	// 7. Send the requested file back to the client (if it exists)
@@ -231,9 +231,11 @@ int main(int argc, char** argv)
 
 	PAUSE(2);
 	//BIO_flush
+     BIO_flush(server);
 	//BIO_new_file
-	//BIO_puts(server, "fnf");
-    //BIO_read(bfile, buffer, BUFFER_SIZE)) > 0)
+    BIO* ifile = BIO_new_file(infilename, "w");
+    BIO_puts(server, "fnf");
+    //BIO_read(ifile, buffer, BUFFER_SIZE)) > 0)
 	//SSL_write(ssl, buffer, bytesRead);
 
     int bytesSent=0;
