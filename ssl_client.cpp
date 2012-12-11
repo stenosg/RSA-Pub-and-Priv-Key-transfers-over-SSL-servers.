@@ -111,7 +111,7 @@ int main(int argc, char** argv)
     string randomNumber="31337";
 	//SSL_write
     int write_x;
-    //const int temp_port =1300;
+  
     write_x = SSL_write(ssl, (const void*)randomNumber.c_str(), BUFFER_SIZE);   
 
 
@@ -122,13 +122,13 @@ int main(int argc, char** argv)
 	// 3a. Receive the signed key from the server
 	printf("3a. Receiving signed key from server...");
 
-    char* buff[1024];
-    int len=5;
+    char* buff[BUFFER_SIZE];
+    memset(buff,0,BUFFER_SIZE);
+    int len = SSL_read(ssl, (void*)buff, BUFFER_SIZE);
 
 	//SSL_read;
 
-     int read_x;
-     read_x = SSL_read(ssl, (void*)buff, len);
+     
      
 
 	printf("RECEIVED.\n");
@@ -138,23 +138,37 @@ int main(int argc, char** argv)
 	// 3b. Authenticate the signed key
 	printf("3b. Authenticating key...");
 
-	//BIO_new(BIO_s_mem())
-     binfile = BIO_new_file(infilename, "w");
+
+     //BIO_new(BIO_s_mem())
 	//BIO_write
-     int bwrite = BIO_write(binfile, (void*)buff, len);
 	//BIO_new_file
+	//PEM_read_bio_RSA_PUBKEY
+	//RSA_public_decrypt
+	//BIO_free
+   
+     char* temp_buff[20];
+
+	//BIO_new(BIO_s_mem())
+     //binfile = BIO_new_file(infilename, "w");
+    
+     BIO* buffx = BIO_new(BIO_s_mem());
+
+	//BIO_write
+     int bwrite = BIO_write(buffx, (void*)buff, len);
+	
 	//PEM_read_bio_RSA_PUBKEY
      BIO *rsapubkey;
      rsapubkey = BIO_new_file(pbcfilename, "r");
      RSA *ninis = PEM_read_bio_RSA_PUBKEY(rsapubkey, NULL, 0, NULL);
      //RSA_public_decrypt
      int e_pub;
-     //e_pub = RSA_public_decrypt(e_priv, (const unsigned char*)buff, buffer1, ninis, RSA_PKCS1_PADDING); 
+     e_pub = RSA_public_decrypt(len, (const unsigned char*)buff, (unsigned char*)temp_buff, ninis, RSA_PKCS1_PADDING); 
 	
+     int freex = BIO_free(buffx);
 	//BIO_free
 	
-	string generated_key = "";//buff2hex((const unsigned char*)buff, len).c_str(), len);
-	string decrypted_key = "";//buff2hex((const unsigned char*)buff, len).c_str(), len);
+	string generated_key = buff2hex((const unsigned char*)buff, len).c_str();
+	string decrypted_key = buff2hex((const unsigned char*)temp_buff, len).c_str();
     
 	printf("AUTHENTICATED\n");
 	printf("    (Generated key: %s)\n", generated_key.c_str());
