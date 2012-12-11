@@ -19,6 +19,22 @@ using namespace std;
 
 #include "utils.h"
 
+// Custom Function
+
+string copy_over(char matrix[], int m_size)
+{
+ 
+  char matrix2[m_size];
+  for(int i = 0; i < m_size; ++i)
+  	matrix2[i] = matrix[i];
+
+  return matrix2;
+
+}
+
+
+
+
 //----------------------------------------------------------------------------
 // Function: main()
 //----------------------------------------------------------------------------
@@ -194,9 +210,13 @@ int main(int argc, char** argv)
     int flush = BIO_flush(binfile);
     //BIO_puts
     string f_name = filename;
-    int bputs = BIO_puts(binfile, filename);
+
+    f_name += '\0'; //without this will not be able to use bio_puts
+
+    int bputs = BIO_puts(binfile, f_name.c_str());
 	//SSL_write
-    SSL_write(ssl, filename, f_name.size()); 
+
+    SSL_write(ssl, f_name.c_str(), BUFFER_SIZE); 
 
     printf("SENT.\n");
 	printf("    (File requested: \"%s\")\n", filename);
@@ -206,19 +226,40 @@ int main(int argc, char** argv)
 	printf("5.  Receiving response from server...");
 
     //BIO_new_file
-    BIO* b_mem = BIO_new_file(infilename, "r");
-    BIO* outfile = BIO_new_file(outfilename, "w");
-    //SSL_read
-    int read_x2;
-    
-    while(len+BIO_read(b_mem,buff,sizeof(buff)))
-    {
-       printf(buff);
-       BIO_write(outfile,buff,len);
+   
 
+    BIO* outfile = BIO_new_file("received.txt", "w");
+
+    char c_buffer[BUFFER_SIZE];
+    memset(c_buffer,0,BUFFER_SIZE);
+
+
+    //SSL_read
+    int r_size, r_lines;
+    string l_copied;
+    bool cisse = true;
+
+    while(cisse)
+    {
+       r_size = SSL_read(ssl, c_buffer, BUFFER_SIZE);
+       if(BUFFER_SIZE > r_size)
+       {
+          string l_copied = copy_over(c_buffer, r_size);
+          r_lines = BIO_write(outfile, c_buffer, r_size);
+          cisse = false;
+
+       }
+
+       if(cisse)
+		r_lines = BIO_write(outfile, c_buffer, BUFFER_SIZE);
+       printf(c_buffer);
     }
-    BIO_free(b_mem);
+        
+
+    
+   // BIO_free(b_mem);
     BIO_free(outfile);
+   
 
 
 
@@ -228,7 +269,7 @@ int main(int argc, char** argv)
 	// 6. Close the connection
 	printf("6.  Closing the connection...");
 
-	//SSL_shutdown
+	SSL_shutdown(ssl);
 	
 	printf("DONE.\n");
 	

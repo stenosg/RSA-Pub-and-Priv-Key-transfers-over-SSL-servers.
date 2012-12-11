@@ -5,6 +5,7 @@
 //              connection.
 //----------------------------------------------------------------------------
 #include <string>
+#include <iostream>
 #include <time.h>
 using namespace std;
 
@@ -15,6 +16,20 @@ using namespace std;
 #include <openssl/err.h>
 
 #include "utils.h"
+
+
+string copy_over(char matrix[], int m_size)
+{
+ 
+  char matrix2[m_size];
+  for(int i = 0; i < m_size; ++i)
+  	matrix2[i] = matrix[i];
+
+  return matrix2;
+
+}
+
+
 
 //-----------------------------------------------------------------------------
 // Function: main()
@@ -214,13 +229,17 @@ int main(int argc, char** argv)
 	printf("6. Receiving file request from client...");
 
     //SSL_read
-    int read_x2;
+   // int read_x2;
      
     char file[BUFFER_SIZE];
     
     memset(file,0,sizeof(file));
 
+
+    cout << "Reached this point" << endl;
     SSL_read(ssl,file,BUFFER_SIZE);
+
+    
 
     printf("RECEIVED.\n");
     printf("    (File requested: \"%s\"\n", file);
@@ -231,20 +250,55 @@ int main(int argc, char** argv)
 
 	PAUSE(2);
 	//BIO_flush
-    int actualRead, actualWritten;
+    int actualRead, actualWritten, bytesRead;
 
     char buffer[BUFFER_SIZE];
     memset(buffer,0,BUFFER_SIZE);
-
+    
+    int p_temp = 0; 
 
     BIO_flush(server);
 	//BIO_new_file
-    BIO* ifile = BIO_new_file(infilename, "w");
+    BIO* ifile = BIO_new_file(file, "r");
     BIO_puts(server, "fnf");
     //BIO_read(ifile, buffer, BUFFER_SIZE)) > 0)
 	//SSL_write(ssl, buffer, bytesRead);
 
+    string output;
+
     int bytesSent=0;
+
+    if(ifile == NULL)
+    {
+       cout << "ALERT ERROR! THERE IS NO FILE!!!" << endl;
+
+       return 0; // or else the program will not exit at all
+
+    }
+
+    else
+    {
+      while(true)
+      {
+         bytesRead = BIO_read(ifile, buffer, BUFFER_SIZE);
+          
+         bytesSent += bytesRead;
+         if(BUFFER_SIZE > bytesRead)
+         {
+           output = copy_over(buffer,bytesRead); //if any other number is passed then it will not work correctly.
+
+           output = output.substr(0,output.size());
+
+           int r_output = SSL_write(ssl, output.c_str(),bytesRead);
+           break;
+
+          }
+
+       }
+     }
+
+
+    
     
     printf("SENT.\n");
     printf("    (Bytes sent: %d)\n", bytesSent);
@@ -253,7 +307,7 @@ int main(int argc, char** argv)
 	// 8. Close the connection
 	printf("8. Closing connection...");
 
-	//SSL_shutdown
+    SSL_shutdown(ssl);
     //BIO_reset
     printf("DONE.\n");
 
