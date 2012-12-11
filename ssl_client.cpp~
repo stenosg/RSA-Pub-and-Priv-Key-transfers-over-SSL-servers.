@@ -9,7 +9,7 @@
 #include <time.h>               // to seed random number generator
 #include <sstream>          // stringstreams
 using namespace std;
-
+#include <openssl/rand.h>
 #include <openssl/ssl.h>	// Secure Socket Layer library
 #include <openssl/bio.h>	// Basic Input/Output objects for SSL
 #include <openssl/rsa.h>	// RSA algorithm etc
@@ -21,16 +21,7 @@ using namespace std;
 
 // Custom Function
 
-string copy_over(char matrix[], int m_size)
-{
- 
-  char matrix2[m_size];
-  for(int i = 0; i < m_size; ++i)
-  	matrix2[i] = matrix[i];
 
-  return matrix2;
-
-}
 
 
 
@@ -125,15 +116,19 @@ int main(int argc, char** argv)
 	// 2. Send the server a random number
 	printf("2.  Sending challenge to the server...");
     
-    string randomNumber="31337";
+    char randomNumber[BUFFER_SIZE];
 	//SSL_write
     int write_x;
-  
-    write_x = SSL_write(ssl, (const void*)randomNumber.c_str(), BUFFER_SIZE);   
+    //int RAND_bytes(unsigned char *buf, int num);
 
+    int randm = RAND_bytes((unsigned char*)randomNumber, 13);
+  
+    write_x = SSL_write(ssl, (const void*)randomNumber, BUFFER_SIZE);   
+
+    string tempo = buff2hex((const unsigned char*)randomNumber, BUFFER_SIZE).c_str();
 
     printf("SUCCESS.\n");
-	printf("    (Challenge sent: \"%s\")\n", randomNumber.c_str());
+	printf("    (Challenge sent: \"%s\")\n", tempo.c_str());
 
     //-------------------------------------------------------------------------
 	// 3a. Receive the signed key from the server
@@ -194,6 +189,15 @@ int main(int argc, char** argv)
 	
 	generated_key = buff2hex((const unsigned char*)buff, 20).c_str();
 	decrypted_key = buff2hex((const unsigned char*)temp_buff, 20).c_str();
+   
+     for(int i = 0; i < generated_key.size(); ++i)
+     {
+       if(generated_key[i] != buff[i]
+       { 
+         cout << "IN CORRECT SIGNATURE" << endl;
+         break;
+       }
+     }
 
      int freex = BIO_free(buffx);
     
@@ -228,7 +232,7 @@ int main(int argc, char** argv)
     //BIO_new_file
    
 
-    BIO* outfile = BIO_new_file("received.txt", "w");
+    BIO* outfile = BIO_new_file("gekas_out.txt", "w");
 
     char c_buffer[BUFFER_SIZE];
     memset(c_buffer,0,BUFFER_SIZE);
@@ -241,10 +245,13 @@ int main(int argc, char** argv)
 
     while(cisse)
     {
-       r_size = SSL_read(ssl, c_buffer, BUFFER_SIZE);
-       if(BUFFER_SIZE > r_size)
+       r_size = SSL_read(ssl, c_buffer, sizeof(c_buffer));
+       printf(c_buffer);
+       cout << "r_size:" << r_size << endl;
+       if(r_size < BUFFER_SIZE)
        {
-          string l_copied = copy_over(c_buffer, r_size);
+          for(int i = 0; i < r_size; ++i)
+             l_copied[i] = c_buffer[i];
           r_lines = BIO_write(outfile, c_buffer, r_size);
           cisse = false;
 
@@ -252,7 +259,7 @@ int main(int argc, char** argv)
 
        if(cisse)
 		r_lines = BIO_write(outfile, c_buffer, BUFFER_SIZE);
-       printf(c_buffer);
+       
     }
         
 

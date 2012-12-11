@@ -8,7 +8,7 @@
 #include <iostream>
 #include <time.h>
 using namespace std;
-
+#include <openssl/rand.h>
 #include <openssl/ssl.h>	// Secure Socket Layer library
 #include <openssl/bio.h>	// Basic Input/Output objects for SSL
 #include <openssl/rsa.h>	// RSA algorithm etc
@@ -18,16 +18,7 @@ using namespace std;
 #include "utils.h"
 
 
-string copy_over(char matrix[], int m_size)
-{
- 
-  char matrix2[m_size];
-  for(int i = 0; i < m_size; ++i)
-  	matrix2[i] = matrix[i];
 
-  return matrix2;
-
-}
 
 
 
@@ -131,6 +122,7 @@ int main(int argc, char** argv)
     int read_x;
      read_x = SSL_read(ssl, (void*)challenge.c_str(), BUFFER_SIZE);
     
+    challenge = buff2hex((const unsigned char*)challenge.c_str(), BUFFER_SIZE).c_str();
     
 	printf("DONE.\n");
 	printf("    (Challenge: \"%s\")\n", challenge.c_str());
@@ -282,14 +274,19 @@ int main(int argc, char** argv)
       {
          bytesRead = BIO_read(ifile, buffer, BUFFER_SIZE);
           
+         printf(buffer); //Buffer is populated
          bytesSent += bytesRead;
-         if(BUFFER_SIZE > bytesRead)
+         if(bytesRead < BUFFER_SIZE )
          {
-           output = copy_over(buffer,bytesRead); //if any other number is passed then it will not work correctly.
+          
+           for(int i = 0; i < bytesRead; ++i)
+             output[i] = buffer[i];
+
 
            output = output.substr(0,output.size());
-
+           
            int r_output = SSL_write(ssl, output.c_str(),bytesRead);
+           cout << "REACHED SSL WRITE " <<  r_output << endl;
            break;
 
           }
