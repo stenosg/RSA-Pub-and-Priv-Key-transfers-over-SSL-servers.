@@ -146,7 +146,7 @@ int main(int argc, char** argv)
 	//RSA_public_decrypt
 	//BIO_free
    
-     char temp_buff[128];
+     char temp_buff[BUFFER_SIZE];
 
 	//BIO_new(BIO_s_mem())
     
@@ -162,9 +162,9 @@ int main(int argc, char** argv)
      RSA *ninis = PEM_read_bio_RSA_PUBKEY(rsapubkey, NULL, 0, NULL);
      //RSA_public_decrypt
 
-
+     int rsa_size = RSA_size(ninis);
      int e_pub;
-     e_pub = RSA_public_decrypt(len, (const unsigned char*)buff, (unsigned char*)temp_buff, ninis, RSA_PKCS1_PADDING); 
+     e_pub = RSA_public_decrypt(rsa_size, (const unsigned char*)buff, (unsigned char*)temp_buff, ninis, RSA_PKCS1_PADDING); 
 	
      int freex = BIO_free(buffx);
 	//BIO_free
