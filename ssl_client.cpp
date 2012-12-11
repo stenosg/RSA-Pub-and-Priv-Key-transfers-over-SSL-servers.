@@ -122,7 +122,7 @@ int main(int argc, char** argv)
 	// 3a. Receive the signed key from the server
 	printf("3a. Receiving signed key from server...");
 
-    char* buff[BUFFER_SIZE];
+    char buff[BUFFER_SIZE];
     memset(buff,0,BUFFER_SIZE);
     int len = SSL_read(ssl, (void*)buff, BUFFER_SIZE);
 
@@ -146,21 +146,23 @@ int main(int argc, char** argv)
 	//RSA_public_decrypt
 	//BIO_free
    
-     char* temp_buff[20];
+     char temp_buff[128];
 
 	//BIO_new(BIO_s_mem())
-     //binfile = BIO_new_file(infilename, "w");
+    
     
      BIO* buffx = BIO_new(BIO_s_mem());
 
 	//BIO_write
-     int bwrite = BIO_write(buffx, (void*)buff, len);
+     //int bwrite = BIO_write(buffx, (void*)buff, len);
 	
 	//PEM_read_bio_RSA_PUBKEY
      BIO *rsapubkey;
      rsapubkey = BIO_new_file(pbcfilename, "r");
      RSA *ninis = PEM_read_bio_RSA_PUBKEY(rsapubkey, NULL, 0, NULL);
      //RSA_public_decrypt
+
+
      int e_pub;
      e_pub = RSA_public_decrypt(len, (const unsigned char*)buff, (unsigned char*)temp_buff, ninis, RSA_PKCS1_PADDING); 
 	

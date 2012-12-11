@@ -164,7 +164,7 @@ int main(int argc, char** argv)
 	//     file "rsaprivatekey.pem"
 	printf("4. Signing the key...");
 
-    char* temp_buff2[20];
+    char temp_buff2[20];
     
     //PEM_read_bio_RSAPrivateKey
     BIO *rsaprivkey;
@@ -176,20 +176,29 @@ int main(int argc, char** argv)
     //RSA_private_encrypt
 
     int siglen = RSA_private_encrypt(mdlen, (const unsigned char*)hash_string.c_str(), (unsigned char*)temp_buff2, gekas, RSA_PKCS1_PADDING);
-    char* signature="";
+    const char* signature= buff2hex((const unsigned char*)temp_buff2, siglen).c_str();
 
     printf("DONE.\n");
     printf("    (Signed key length: %d bytes)\n", siglen);
-    printf("    (Signature: \"%s\" (%d bytes))\n", buff2hex((const unsigned char*)signature, siglen).c_str(), siglen);
+    printf("    (Signature: \"%s\" (%d bytes))\n", signature, siglen);
 
     //-------------------------------------------------------------------------
 	// 5. Send the signature to the client for authentication
 	printf("5. Sending signature to client for authentication...");
 
+    
+
 	//BIO_flush
 	//SSL_write
+     printf("    (Signed key length: %d bytes)\n", siglen);
+    printf("    (Signature: \"%s\" (%d bytes))\n", signature, siglen);
      int write_x;
-      write_x = SSL_write(ssl, (const void*)signature, siglen); 
+     
+      write_x = SSL_write(ssl, signature, siglen);
+
+     
+
+      
 
     printf("DONE.\n");
     
