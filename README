@@ -2,24 +2,8 @@ George Stenos
 860892560
 stenosg
 
-In order to run the program, type in make into the terminal to compile. To launch the server type this exactly: "server #### stenos.txt" where #### is any port number.
-Then to launch the client, then type this into a seperate terminal while making sure to be in the same directory: "client localhost:#### stenos.txt"
-
-===========================================================================PROBLEMS I HAD===================================================================================
-
-I was not able to get decryption to work correctly, even though I had it correct in lab 7, simple.cpp. I then implemented the thought process into server, and the encryption and decryption worked correctly, same when I tried it on client. However, when combining both processes then my decryption does not work at all. 
-
-Before I implemented the random number generator for the challenge, the hash would be :33317, but when it would be decrypted it would be: 3333333133337, for some reason there would be extra 3's in spaces where it should not be. I spent too long on this problem and chose to move on.
-
-
-I was not able to display the contents of the file on the client terminal, even though they were being stored into buffer correctly as can be seen by the output.
-For some reason while trying to call SSL_read(...) to retrieve the file contents, -1 would be returned and I could not figure out this problem because I spent too much time on getting decryption to work correctly. It's 11:50PM and I rather send what I have working 100% then not turn anything in at all.
-
 
 ==========================================================================HOW PROJECT WORKS=================================================================================
 
 The client sends a random challenge to the server, who the hashes and sends the signature back. If the signature and generated key do not match, an error is returned because the correct file was not sent. Else then the program continues.
-
-I did not include if the decryption does not work correctly because mine did not for some reason, even though I used the same understanding for the seperate files. If I had included it, the program would not continue.
-
-The client and server verify the RSA pub and private matching, then the client calls for stenos.txt. Server correctly outputs stenos.txt to the buffer, however, client does not output the contents of the file, instead returning -1. I could not find out what caused this error.
+The client and server verify the RSA pub and private matching, then the client calls for stenos.txt. 
